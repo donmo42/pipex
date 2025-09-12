@@ -6,7 +6,13 @@
 /*   By: macoulib <macoulib@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/11 15:12:24 by macoulib          #+#    #+#             */
-/*   Updated: 2025/09/11 15:12:25 by macoulib         ###   ########.fr       */
+/*   Updated: 2025/09/12 17:27:51 by macoulib         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "./includes/pipex.h"
+
+void	func_exe(t_data data, char **env)
+{
+    
+}
