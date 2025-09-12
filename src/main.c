@@ -6,7 +6,7 @@
 /*   By: macoulib <macoulib@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/11 15:12:21 by macoulib          #+#    #+#             */
-/*   Updated: 2025/09/11 20:51:31 by macoulib         ###   ########.fr       */
+/*   Updated: 2025/09/12 15:54:01 by macoulib         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,20 +19,24 @@ char	*find_path(char **env)
 	return (*env + 5);
 }
 
-void	child_process(t_data *data, char **env, char **av)
+void	start_child_process(t_data data, char **env)
 {
-	data->pid1 = fork();
+	dup2(data.fd[1], STDOUT_FILENO);
+	dup2(data.infile, STDIN_FILENO);
+	close(data.fd[0]);
 }
 
-void	parent_process(t_data *data, char **env, char **av)
+void	start_parent_process(t_data data, char **env)
 {
-	data->pid2 = fork();
+	dup2(data.fd[0], STDIN_FILENO);
+	dup2(data.outfile, STDOUT_FILENO);
+	close(data.fd[1]);
 }
 
 int	main(int ac, char *av[], char *env[])
 {
-	t_data data;
-	int i;
+	t_data	data;
+	int		i;
 
 	i = 1;
 	if (ac != 5)
@@ -43,5 +47,11 @@ int	main(int ac, char *av[], char *env[])
 		exit(0);
 	if (pipe(data.fd) < 0)
 		exit(0);
-	data.env_paths = find_path(env);
+	data.pid1 = fork();
+	if (data.pid1 == -1)
+		exit(0);
+	if (data.pid1 == 0)
+		start_child_process(data, env);
+	else
+		start_parent_process(data, env);
 }
