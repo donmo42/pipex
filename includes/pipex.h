@@ -6,7 +6,7 @@
 /*   By: macoulib <macoulib@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/11 15:14:02 by macoulib          #+#    #+#             */
-/*   Updated: 2025/09/12 17:28:02 by macoulib         ###   ########.fr       */
+/*   Updated: 2025/09/13 17:58:10 by macoulib         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,13 +29,14 @@ typedef struct s_data
 	int		infile;
 	int		outfile;
 	char	*env_paths;
-	char	**cmd_paths;
-	char	**cmd_args;
-	char	*cmd;
+	char	**cmd_path;
+	char	**cmd;
+
 }			t_data;
 
 void		exit_msg(void);
-void		func_exe(t_data data, char **env);
-char		*find_path(char **env);
+void		func_exe(t_data data, char *av, char **env);
+
+char		*find_path(char **envp);
 
 #endif
