@@ -6,7 +6,7 @@
 /*   By: macoulib <macoulib@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/11 15:14:02 by macoulib          #+#    #+#             */
-/*   Updated: 2025/09/14 19:06:42 by macoulib         ###   ########.fr       */
+/*   Updated: 2025/09/14 19:20:56 by macoulib         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,6 @@ typedef struct s_data
 
 void		argv_error(void);
 char		*find_path(char **env, char *cmd);
-int			init_data(t_data data, char **argv, char **envp);
+int			init_data(t_data *data, char **argv, char **envp);
 
 #endif

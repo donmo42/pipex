@@ -6,7 +6,7 @@
 /*   By: macoulib <macoulib@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/11 15:12:24 by macoulib          #+#    #+#             */
-/*   Updated: 2025/09/14 19:06:34 by macoulib         ###   ########.fr       */
+/*   Updated: 2025/09/14 19:28:38 by macoulib         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,28 +48,30 @@ char	*find_path(char **env, char *cmd)
 	return (NULL);
 }
 
-int	init_data(t_data data, char **argv, char **envp)
+int	init_data(t_data *data, char **argv, char **envp)
 {
-	
-	
-	
-	data.cmd = ft_split(argv[2], ' ');
-	if (!data.cmd)
+	data->cmd = ft_split(argv[2], ' ');
+	if (!data->cmd)
 		return (0);
-	data.cmd2 = ft_split(argv[4], ' ');
-	if (!data.cmd2)
+	data->cmd2 = ft_split(argv[3], ' ');
+	if (!data->cmd2)
 		return (0);
-	data.cmd_path = find_path(envp, data.cmd[0]);
-	if (data.cmd_path == NULL)
+	data->cmd_path = find_path(envp, data->cmd[0]);
+	if (data->cmd_path == NULL)
 		return (0);
-	data.cmd_path2 = find_path(envp, data.cmd2[0]);
-	if (data.cmd_path2 == NULL)
+	data->cmd_path2 = find_path(envp, data->cmd2[0]);
+	if (data->cmd_path2 == NULL)
 		return (0);
-	data.infile = open(argv[1], O_RDONLY);
-	if (data.infile < 0)
+	data->infile = open(argv[1], O_RDONLY);
+	if (data->infile < 0)
 		return (0);
-	data.outfile = open(argv[4], O_TRUNC | O_CREAT | O_RDWR, 0644);
-	if (data.outfile < 0)
+	data->outfile = open(argv[4], O_TRUNC | O_CREAT | O_RDWR, 0644);
+	if (data->outfile < 0)
+		return (0);
+	if (pipe(data->fd) == -1)
+		return (0);
+	data->pid = fork();
+	if (data->pid == -1)
 		return (0);
 	return (1);
 }
