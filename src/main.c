@@ -6,11 +6,11 @@
 /*   By: macoulib <macoulib@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/11 15:12:21 by macoulib          #+#    #+#             */
-/*   Updated: 2025/09/13 17:59:08 by macoulib         ###   ########.fr       */
+/*   Updated: 2025/09/14 14:38:02 by macoulib         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "./includes/pipex.h"
+#include "../includes/pipex.h"
 
 void	exit_msg(void)
 {
@@ -37,11 +37,12 @@ int	main(int ac, char *av[], char *envp[])
 {
 	t_data	data;
 
+	data.pid = 0;
 	if (ac != 5)
 		exit_msg();
-	if (init_data(data, av) != 1)
+	if (init_data(data, av, envp) != 1)
 		exit(0);
-	if (data.pid1 == 0)
+	if (!data.pid)
 		start_child_process(data, envp);
 	start_parent_process(data, envp);
 }

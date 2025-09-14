@@ -6,11 +6,11 @@
 /*   By: macoulib <macoulib@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/11 15:12:24 by macoulib          #+#    #+#             */
-/*   Updated: 2025/09/13 17:58:28 by macoulib         ###   ########.fr       */
+/*   Updated: 2025/09/14 14:32:07 by macoulib         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "./includes/pipex.h"
+#include "../includes/pipex.h"
 
 char	*find_path(char **env, char *cmd)
 {
@@ -22,7 +22,7 @@ char	*find_path(char **env, char *cmd)
 	i = 0;
 	while (ft_strnstr(env[i], "PATH", 4) == 0)
 		i++;
-	paths = ft_split(env[i] + 5, ":");
+	paths = ft_split(env[i] + 5, ':');
 	if (!paths)
 		return (NULL);
 	i = 0;
@@ -45,9 +45,9 @@ char	*find_path(char **env, char *cmd)
 
 int	init_data(t_data data, char **av, char **envp)
 {
-	data.cmd_path = ft_split(av[2], ' ');
-	if (!data.cmd_path)
-		return (NULL);
+	data.cmd = ft_split(av[2], ' ');
+	if (!data.cmd)
+		return (0);
 	data.cmd_path = find_path(envp, data.cmd[0]);
 	if (data.cmd_path == NULL)
 		return (0);
@@ -59,15 +59,15 @@ int	init_data(t_data data, char **av, char **envp)
 		return (0);
 	if (pipe(data.fd) < 0)
 		return (0);
-	data.pid1 = fork();
-	if (data.pid1 < 0)
+	data.pid = fork();
+	if (data.pid < 0)
 		return (0);
 	return (1);
 }
 
 void	func_exe(t_data data, char *av, char **envp)
 {
-	if (execve(data.cmd, data.cmd_path, envp) == -1)
+	if (execve(av,data.cmd,envp) == -1)
 	{
 		free(data.cmd);
 		exit(0);

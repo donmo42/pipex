@@ -6,14 +6,15 @@
 /*   By: macoulib <macoulib@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/11 15:14:02 by macoulib          #+#    #+#             */
-/*   Updated: 2025/09/13 17:58:10 by macoulib         ###   ########.fr       */
+/*   Updated: 2025/09/14 14:32:13 by macoulib         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PIPEX_H
 # define PIPEX_H
 
-# include "./librairie/ft_libft/libft.h"
+# include "../librairie/ft_libft/libft.h"
+# include "../librairie/printf/ftprint/ft_printf.h"
 # include <fcntl.h>
 # include <stdio.h>
 # include <stdlib.h>
@@ -24,19 +25,18 @@
 
 typedef struct s_data
 {
-	pid_t	pid1;
+	pid_t	pid;
 	int		fd[2];
 	int		infile;
 	int		outfile;
-	char	*env_paths;
-	char	**cmd_path;
+	char	*cmd_path;
 	char	**cmd;
 
 }			t_data;
 
 void		exit_msg(void);
 void		func_exe(t_data data, char *av, char **env);
-
-char		*find_path(char **envp);
+char		*find_path(char **env, char *cmd);
+int			init_data(t_data data, char **av, char **envp);
 
 #endif
