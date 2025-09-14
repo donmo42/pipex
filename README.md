@@ -1,46 +1,39 @@
-🌀 Pipex
-🔎 Description
+# 🌀 Pipex
 
-pipex est un programme qui reproduit le comportement suivant de ton shell :
+## 🔎 Description
+Mon programme `pipex` reproduit le comportement suivant du shell :  
+
 < infile cmd1 | cmd2 > outfile
 
+Il prend 4 arguments :  
+- argv[1] = infile → fichier d’entrée  
+- argv[2] = cmd1 → première commande à exécuter  
+- argv[3] = cmd2 → deuxième commande à exécuter  
+- argv[4] = outfile → fichier de sortie  
 
-Il prend 4 arguments :
+## ⚙️ Fonctionnement
+Pipex fonctionne en créant un **pipe** et en utilisant **fork()** pour gérer deux processus qui communiquent entre eux. L’idée est simple : lire depuis un fichier d’entrée, passer le résultat d’une commande à une autre, puis écrire dans un fichier de sortie.
 
-argv[1] = infile → fichier d’entrée
-argv[2] = cmd1 → première commande à exécuter
-argv[3] = cmd2 → deuxième commande à exécuter
-argv[4] = outfile → fichier de sortie
+Voici le déroulement :
 
-⚙️ Fonctionnement interne
+1. Le flux d’entrée standard est redirigé vers `infile`, et la sortie standard vers le côté écriture du pipe.  
+2. La première commande (`cmd1`) s’exécute avec `execve`. Elle lit dans `infile` et écrit dans le pipe.  
+3. Le flux de sortie du pipe devient l’entrée standard pour la deuxième commande (`cmd2`), dont la sortie standard est redirigée vers `outfile`.  
+4. Ensuite, `cmd2` s’exécute avec `execve` et écrit le résultat final dans `outfile`.
 
-Ton pipex crée un pipe et utilise fork() pour créer deux processus :
-processus enfant → exécute cmd1
-processus parent → exécute cmd2
-Les deux communiquent via le pipe.
+En code, tout cela se traduit par :
 
-🧒 Processus enfant (cmd1)
-
+```c
 dup2(data->infile, 0);    // stdin ← infile
 dup2(data->fd[1], 1);     // stdout → pipe(write)
-close(data->fd[0]);       // inutile ici
+close(data->fd[0]);       // côté lecture du pipe inutile
 execve(data->cmd_path, data->cmd, envp);
-➡️ Concrètement :
-
-cmd1 lit depuis infile (comme si on faisait < infile)
-
-cmd1 écrit dans le pipe (côté écriture)
-
-👉 Résultat :
-cmd1 < infile |
-
-
-👨‍🦳 Processus parent (cmd2)
 
 dup2(data->outfile, 1);   // stdout → outfile
 dup2(data->fd[0], 0);     // stdin ← pipe(read)
-close(data->fd[1]);       // inutile ici
+close(data->fd[1]);       // côté écriture du pipe inutile
 execve(data->cmd_path2, data->cmd2, envp);
+
 
 ➡️ Concrètement :
 
