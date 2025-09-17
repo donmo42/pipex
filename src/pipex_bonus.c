@@ -6,7 +6,7 @@
 /*   By: macoulib <macoulib@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/16 14:23:52 by macoulib          #+#    #+#             */
-/*   Updated: 2025/09/16 20:02:31 by macoulib         ###   ########.fr       */
+/*   Updated: 2025/09/17 18:50:54 by macoulib         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,3 +68,4 @@ char	*find_path(char **env, char *cmd)
 	free(paths);
 	return (NULL);
 }
+
