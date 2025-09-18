@@ -5,86 +5,80 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: macoulib <macoulib@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/09/16 14:23:49 by macoulib          #+#    #+#             */
-/*   Updated: 2025/09/16 19:51:21 by macoulib         ###   ########.fr       */
+/*   Created: 2025/09/18 20:33:38 by macoulib          #+#    #+#             */
+/*   Updated: 2025/09/18 21:06:18 by macoulib         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex_bonus.h"
 
-void	exe_cmd(char *av, int pipe_in, int pipe_out, char **envp)
+void	here_doc(int ac, char **av, char **envp)
 {
-	char	**cmd;
-	char	**path;
+	pid_t	pid_gnl;
+	pid_t	pid_executor;
+	int		fd[2];
+	char	*line;
+	int		outfile;
 
-	if (dup2(pipe_in, 0) == -1)
-		print_error_and_exit("dup2 failed for input");
-	if (dup2(pipe_out, 1) == -1)
-		print_error_and_exit("dup2 failed for output");
-	cmd = ft_split(av, ' ');
-	if (!cmd)
+	if (pipe(fd) == -1)
+		print_error_and_exit("fd error");
+	pid_gnl = fork();
+	if (pid_gnl == -1)
+		print_error_and_exit("error fork gnl_pid");
+	if (pid_gnl == 0)
 	{
-		ft_printf("Error: ft_split failed\n");
-		exit(EXIT_FAILURE);
+		close(fd[0]);
+		while (1)
+		{
+			line = get_next_line(0);
+			if (!line)
+				break ;
+			if (ft_strncmp(line, av[2], ft_strlen(av[2])) == 0)
+			{
+				free(line);
+				break ;
+			}
+			ft_putstr_fd(line, fd[1]);
+			free(line);
+		}
+		
+		close(fd[1]);
 	}
-	path = find_path(envp, cmd);
-	if (!path)
+	outfile = open(av[ac - 1], O_WRONLY | O_CREAT | O_APPEND, 0644);
+	if (outfile == -1)
+		print_error_and_exit("error open outifle");
+	pid_executor = fork();
+	if (pid_executor == -1)
+		print_error_and_exit("error exe pid");
+	if (pid_executor == 0)
 	{
-		ft_printf("pipex: command not found: %s\n", cmd[0]);
-		free_split(cmd);
-		exit(EXIT_FAILURE);
+		if (dup2(fd[0], 0) == -1)
+			print_error_and_exit("dup2 in");
+		if (dup2(outfile, 1) == -1)
+			print_error_and_exit("dup2 out");
+		close(fd[0]);
+		close(outfile);
 	}
-	execve(path, cmd, envp);
-	perror("execve failed");
-	exit(EXIT_FAILURE);
 }
-
 int	main(int ac, char **av, char **envp)
 {
-	int	i;
-	int	pipe_in;int	status;
-	int	pipe_fd[2];
-	int	pid;
-	int	outfile;
-	int	status;
-
-	i = 2;
-	if (ac < 5)
-		print_error_and_exit("Usage: you need more than 5 arguments!");
-	pipe_in = open(av[1], O_RDONLY);
-	if (pipe_in < 0)
-		print_error_and_exit("pipe_in faile");
-	while (i < ac - 2)
+	if (ac > 1 && ft_strncmp(av[1], "here_doc", 8) == 0)
 	{
-		if (pipe(pipe_fd) == -1)
-			print_error_and_exit("pipe failed");
-		pid = fork();
-		if (pid == -1)
-			print_error_and_exit("fork failed");
-		if (pid == 0)
-		{
-			close(pipe_fd[0]);
-			exe_cmd(av[i], pipe_in, pipe_fd[1], envp);
-		}
-		else
-		{
-			close(pipe_fd[1]);
-			close(pipe_in);
-			pipe_in = pipe_fd[0];
-		}
-		i++;
+		if (ac < 6)
+			print_error_and_exit("Usage: ./pipex here_doc LIMITER cmd1 cmd2 file");
+		here_doc(ac, av, envp);
 	}
-	outfile = open(av[ac - 1], O_WRONLY | O_CREAT | O_TRUNC, 0644);
-	if (outfile < 0)
-		print_error_and_exit("outfile failed");
-	pid = fork();
-	if (pid == 0)
-		exe_cmd(av[i], pipe_in, outfile, envp);
+
 	else
 	{
-		close(pipe_in);
-		close(outfile);
-		waitpid(pid, &status, 0);
+		if (ac < 5)
+		{
+			ft_putstr_fd("Usage:\n", 2);
+			ft_putstr_fd("./pipex file1 cmd1 cmd2 ... cmdn file2\n", 2);
+			ft_putstr_fd("./pipex here_doc LIMITER cmd1 cmd2 file\n", 2);
+			return (1);
+		}
+		// pipe_chain(ac, av, envp);
 	}
 	return (0);
 }

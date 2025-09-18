@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: macoulib <macoulib@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/09/16 18:14:17 by macoulib          #+#    #+#             */
-/*   Updated: 2025/09/16 20:02:42 by macoulib         ###   ########.fr       */
+/*   Created: 2025/09/18 20:34:01 by macoulib          #+#    #+#             */
+/*   Updated: 2025/09/18 20:37:50 by macoulib         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@
 
 void	print_error_and_exit(const char *msg);
 char	*find_path(char **env, char *cmd);
-void	exe_cmd(char *av, int pipe_in, int pipe_out, char **envp);
 void	free_split(char **tab);
+void ft_putstr_fd(char *s, int fd);
 
 #endif

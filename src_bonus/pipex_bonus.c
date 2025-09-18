@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: macoulib <macoulib@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/09/16 14:23:52 by macoulib          #+#    #+#             */
-/*   Updated: 2025/09/17 18:50:54 by macoulib         ###   ########.fr       */
+/*   Created: 2025/09/18 20:33:35 by macoulib          #+#    #+#             */
+/*   Updated: 2025/09/18 21:07:04 by macoulib         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,16 @@ void	print_error_and_exit(const char *msg)
 	exit(EXIT_FAILURE);
 }
 
+void	ft_putstr_fd(char *s, int fd)
+{
+	if (s == NULL)
+		return ;
+	while (*s)
+	{
+		write(fd, s, 1);
+		s++;
+	}
+}
 
 void	free_split(char **tab)
 {
@@ -31,7 +41,6 @@ void	free_split(char **tab)
 	}
 	free(tab);
 }
-
 
 char	*find_path(char **env, char *cmd)
 {
@@ -68,4 +77,3 @@ char	*find_path(char **env, char *cmd)
 	free(paths);
 	return (NULL);
 }
-
