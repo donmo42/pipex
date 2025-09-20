@@ -6,17 +6,13 @@
 /*   By: macoulib <macoulib@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/11 15:12:24 by macoulib          #+#    #+#             */
-/*   Updated: 2025/09/16 17:13:16 by macoulib         ###   ########.fr       */
+/*   Updated: 2025/09/19 23:08:01 by macoulib         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/pipex.h"
 
-void	print_error_and_exit(const char *msg)
-{
-	perror(msg);
-	exit(EXIT_FAILURE);
-}
+
 
 void	cleanup(t_data *data)
 {
@@ -88,6 +84,7 @@ void	first_init(t_data *data)
 	data->fd[0] = -1;
 	data->fd[1] = -1;
 }
+
 int	init_data(t_data *data, char **argv, char **envp)
 {
 	data->cmd = ft_split(argv[2], ' ');

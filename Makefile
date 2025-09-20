@@ -14,7 +14,9 @@ SRCS     = $(SRCS_DIR)/pipex.c \
 
 # Fichiers sources de la version bonus
 SRCS_BONUS = $(SRCS_DBONUS)/pipex_bonus.c \
-             $(SRCS_DBONUS)/main_bonus.c
+             $(SRCS_DBONUS)/main_bonus.c\
+			  $(SRCS_DBONUS)/get_next_line.c\
+			  
 
 # Fichiers objets de la version standard
 OBJS     = $(SRCS:$(SRCS_DIR)/%.c=$(OBJS_DIR)/%.o)

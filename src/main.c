@@ -6,11 +6,17 @@
 /*   By: macoulib <macoulib@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/11 15:12:21 by macoulib          #+#    #+#             */
-/*   Updated: 2025/09/16 17:18:34 by macoulib         ###   ########.fr       */
+/*   Updated: 2025/09/19 23:07:58 by macoulib         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/pipex.h"
+
+void	print_error_and_exit(const char *msg)
+{
+	perror(msg);
+	exit(EXIT_FAILURE);
+}
 
 void	free_split(char **tab)
 {
@@ -24,6 +30,7 @@ void	free_split(char **tab)
 	}
 	free(tab);
 }
+
 void	start_child_process(t_data *data, char **envp)
 {
 	if (dup2(data->infile, 0) == -1)

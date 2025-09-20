@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: macoulib <macoulib@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/09/18 20:33:35 by macoulib          #+#    #+#             */
-/*   Updated: 2025/09/18 21:07:04 by macoulib         ###   ########.fr       */
+/*   Created: 2025/09/20 16:48:46 by macoulib          #+#    #+#             */
+/*   Updated: 2025/09/20 21:33:21 by macoulib         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,10 +44,10 @@ void	free_split(char **tab)
 
 char	*find_path(char **env, char *cmd)
 {
-	int i;
-	char **paths;
-	char *good_path;
-	char *path_find;
+	int		i;
+	char	**paths;
+	char	*good_path;
+	char	*path_find;
 
 	i = 0;
 	while (ft_strnstr(env[i], "PATH", 4) == 0)
@@ -76,4 +76,19 @@ char	*find_path(char **env, char *cmd)
 		free(paths[i]);
 	free(paths);
 	return (NULL);
+}
+
+void	exe_cmd(char *cmd, char **envp)
+{
+	char	**split_cmd;
+	char	*cmd_path;
+
+	split_cmd = ft_split(cmd, ' ');
+	if (!split_cmd[0] || !split_cmd)
+		print_error_and_exit("Error split command");
+	cmd_path = find_path(envp, split_cmd[0]);
+	if (cmd_path == NULL)
+		ft_putstr_fd("pipex: command not found: ", 2);
+	execve(cmd_path, split_cmd, envp);
+	print_error_and_exit("execve");
 }
