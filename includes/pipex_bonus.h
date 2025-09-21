@@ -6,12 +6,12 @@
 /*   By: macoulib <macoulib@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/20 16:49:42 by macoulib          #+#    #+#             */
-/*   Updated: 2025/09/20 20:32:40 by macoulib         ###   ########.fr       */
+/*   Updated: 2025/09/21 16:50:12 by macoulib         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PIPEX_H
-# define PIPEX_H
+#ifndef PIPEX_BONUS_H
+# define PIPEX_B0NUS_H
 
 # include "../librairie/ft_libft/libft.h"
 # include "../librairie/gnl/get_next_line.h"
@@ -24,19 +24,14 @@
 # include <sys/wait.h>
 # include <unistd.h>
 
-void	print_error_and_exit(const char *msg);
-char	*find_path(char **env, char *cmd);
-void	free_split(char **tab);
-void	ft_putstr_fd(char *s, int fd);
-# include <fcntl.h>
-# include <stdio.h>
-# include <stdlib.h>
-# include <unistd.h>
-
 # ifndef BUFFER_SIZE
 #  define BUFFER_SIZE 42
 # endif
 
+void	print_error_and_exit(const char *msg);
+char	*find_path(char **env, char *cmd);
+void	free_split(char **tab);
+void	ft_putstr_fd(char *s, int fd);
 char	*get_next_line(int fd);
 char	*ft_strjoin(const char *s1, const char *s2);
 char	*ft_strchr(const char *s, int c);

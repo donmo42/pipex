@@ -6,7 +6,7 @@
 /*   By: macoulib <macoulib@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/11 15:12:21 by macoulib          #+#    #+#             */
-/*   Updated: 2025/09/19 23:07:58 by macoulib         ###   ########.fr       */
+/*   Updated: 2025/09/21 18:15:49 by macoulib         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ int	main(int ac, char *av[], char *envp[])
 	}
 	first_init(data);
 	if (init_data(data, av, envp) == 0)
-		return (cleanup(data), EXIT_FAILURE);
+		return (cleanup(data), 2);
 	if (data->pid == 0)
 		start_child_process(data, envp);
 	else

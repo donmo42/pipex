@@ -6,11 +6,11 @@
 /*   By: macoulib <macoulib@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/20 16:48:46 by macoulib          #+#    #+#             */
-/*   Updated: 2025/09/20 21:33:21 by macoulib         ###   ########.fr       */
+/*   Updated: 2025/09/21 16:33:00 by macoulib         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "pipex_bonus.h"
+#include "../includes/pipex_bonus.h"
 
 void	print_error_and_exit(const char *msg)
 {
@@ -42,53 +42,45 @@ void	free_split(char **tab)
 	free(tab);
 }
 
-char	*find_path(char **env, char *cmd)
+char	**get_all_paths(char **env)
 {
-	int		i;
-	char	**paths;
-	char	*good_path;
-	char	*path_find;
+	int	i;
 
 	i = 0;
-	while (ft_strnstr(env[i], "PATH", 4) == 0)
-		i++;
-	if (!env[i])
-		return (NULL);
-	paths = ft_split(env[i] + 5, ':');
-	if (!paths)
-		return (NULL);
-	i = 0;
-	while (paths[i])
+	while (env[i] != NULL)
 	{
-		path_find = ft_strjoin(paths[i], "/");
-		good_path = ft_strjoin(path_find, cmd);
-		free(path_find);
-		if (access(good_path, F_OK) == 0)
-		{
-			free_split(paths);
-			return (good_path);
-		}
-		free(good_path);
+		if (ft_strnstr(env[i], "PATH", 4) != NULL)
+			return (ft_split(env[i] + 5, ':'));
 		i++;
 	}
-	i = -1;
-	while (paths[++i])
-		free(paths[i]);
-	free(paths);
 	return (NULL);
 }
 
-void	exe_cmd(char *cmd, char **envp)
+char	*find_path(char **env, char *cmd)
 {
-	char	**split_cmd;
-	char	*cmd_path;
+	char	**paths;
+	char	*path_find;
+	char	*good_path;
+	int		i;
 
-	split_cmd = ft_split(cmd, ' ');
-	if (!split_cmd[0] || !split_cmd)
-		print_error_and_exit("Error split command");
-	cmd_path = find_path(envp, split_cmd[0]);
-	if (cmd_path == NULL)
-		ft_putstr_fd("pipex: command not found: ", 2);
-	execve(cmd_path, split_cmd, envp);
-	print_error_and_exit("execve");
+	paths = get_all_paths(env);
+	if (paths == NULL)
+		return (NULL);
+	i = 0;
+	while (paths[i] != NULL)
+	{
+		path_find = ft_strjoin(paths[i], "/");
+		if (path_find == NULL)
+			return (NULL);
+		good_path = ft_strjoin(path_find, cmd);
+		free(path_find);
+		if (good_path == NULL)
+			return (NULL);
+		if (access(good_path, F_OK | X_OK) == 0)
+			return (free_split(paths), good_path);
+		free(good_path);
+		i++;
+	}
+	free_split(paths);
+	return (NULL);
 }

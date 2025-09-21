@@ -6,11 +6,26 @@
 /*   By: macoulib <macoulib@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/20 16:48:36 by macoulib          #+#    #+#             */
-/*   Updated: 2025/09/20 21:56:32 by macoulib         ###   ########.fr       */
+/*   Updated: 2025/09/21 17:42:29 by macoulib         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "pipex_bonus.h"
+#include "../includes/pipex_bonus.h"
+
+void	exe_cmd(char *cmd, char **envp)
+{
+	char	**split_cmd;
+	char	*cmd_path;
+
+	split_cmd = ft_split(cmd, ' ');
+	if (!split_cmd[0] || !split_cmd)
+		print_error_and_exit("Error split command");
+	cmd_path = find_path(envp, split_cmd[0]);
+	if (cmd_path == NULL)
+		ft_putstr_fd("pipex: command not found: ", 2);
+	execve(cmd_path, split_cmd, envp);
+	print_error_and_exit("execve");
+}
 
 void	exe_each_cmd(char *av, char **envp)
 {
@@ -50,8 +65,8 @@ void	here_doc2(char **av, int *fd)
 		ft_putstr_fd(line, fd[1]);
 		free(line);
 	}
-	exit(EXIT_SUCCESS);
 }
+
 void	here_doc(char **av, char **envp)
 {
 	pid_t	pid;
@@ -83,25 +98,20 @@ int	main(int ac, char **av, char **envp)
 	int outfile;
 	int infile;
 
+	if (ac < 5)
+		print_error_and_exit("Usage: Usage ./pipex file1 cmd1 cmd2 ... cmdn file2\n here_doc LIMITER cmd1 cmd2 file\n");
 	if (ac > 1 && ft_strncmp(av[1], "here_doc", 8) == 0)
 	{
 		i = 3;
 		outfile = open(av[ac - 1], O_WRONLY | O_CREAT | O_APPEND, 0644);
 		if (outfile == -1)
 			print_error_and_exit("error open outifle ");
-		if (ac < 6)
-			print_error_and_exit("Usage: ./pipex here_doc LIMITER cmd1 cmd2 file");
+		if (ac < 5)
+			print_error_and_exit("Usage: ./ipex here_doc LIMITER cmd1 cmd2 file");
 		here_doc(av, envp);
 	}
 	else
 	{
-		if (ac < 5)
-		{
-			ft_putstr_fd("Usage:\n", 2);
-			ft_putstr_fd("./pipex file1 cmd1 cmd2 ... cmdn file2\n", 2);
-			ft_putstr_fd("./pipex here_doc LIMITER cmd1 cmd2 file\n", 2);
-			return (1);
-		}
 		outfile = open(av[ac - 1], O_WRONLY | O_CREAT | O_TRUNC, 0644);
 		if (outfile == -1)
 			print_error_and_exit("Error opening outfile");
@@ -112,7 +122,7 @@ int	main(int ac, char **av, char **envp)
 		close(infile);
 		i = 2;
 	}
-	while (i < ac - 4)
+	while (i < ac - 3)
 	{
 		exe_each_cmd(av[i], envp);
 		i++;
@@ -121,3 +131,5 @@ int	main(int ac, char **av, char **envp)
 	exe_cmd(av[ac - 2], envp);
 	return (0);
 }
+
+

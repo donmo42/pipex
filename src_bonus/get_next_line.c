@@ -6,16 +6,18 @@
 /*   By: macoulib <macoulib@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/22 19:58:53 by macoulib          #+#    #+#             */
-/*   Updated: 2025/09/20 18:10:53 by macoulib         ###   ########.fr       */
+/*   Updated: 2025/09/21 16:52:48 by macoulib         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "pipex_bonus.h"
+#include "../includes/pipex_bonus.h"
 
 char	*freestat(char *staticbuffer, char *buffer)
 {
 	char	*temp;
 
+	if (!staticbuffer)
+		return (ft_strdup(buffer));
 	temp = ft_strjoin(staticbuffer, buffer);
 	free(staticbuffer);
 	return (temp);

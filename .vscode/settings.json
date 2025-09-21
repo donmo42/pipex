@@ -3,6 +3,7 @@
         "pipex.h": "c",
         "stdio.h": "c",
         "libft.h": "c",
-        "types.h": "c"
+        "types.h": "c",
+        "stdlib.h": "c"
     }
 }
