@@ -6,7 +6,7 @@
 /*   By: macoulib <macoulib@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/20 16:48:36 by macoulib          #+#    #+#             */
-/*   Updated: 2025/09/21 17:42:29 by macoulib         ###   ########.fr       */
+/*   Updated: 2025/09/22 18:43:53 by macoulib         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,7 @@ void	here_doc(char **av, char **envp)
 	{
 		close(fd[0]);
 		here_doc2(av, fd);
+		exit(EXIT_SUCCESS);
 	}
 	else
 	{
@@ -99,28 +100,28 @@ int	main(int ac, char **av, char **envp)
 	int infile;
 
 	if (ac < 5)
-		print_error_and_exit("Usage: Usage ./pipex file1 cmd1 cmd2 ... cmdn file2\n here_doc LIMITER cmd1 cmd2 file\n");
-	if (ac > 1 && ft_strncmp(av[1], "here_doc", 8) == 0)
+		return (ft_printf("Usage: file1 cmd1 cmd2 \n"), 1);
+	if (ft_strncmp(av[1], "here_doc", 8) == 0)
 	{
 		i = 3;
+		if (ac < 6)
+			return (ft_printf("Usage: here_doc LIMITER cmd1 cmd2 filee\n"), 1);
 		outfile = open(av[ac - 1], O_WRONLY | O_CREAT | O_APPEND, 0644);
 		if (outfile == -1)
 			print_error_and_exit("error open outifle ");
-		if (ac < 5)
-			print_error_and_exit("Usage: ./ipex here_doc LIMITER cmd1 cmd2 file");
 		here_doc(av, envp);
 	}
 	else
 	{
+		i = 2;
 		outfile = open(av[ac - 1], O_WRONLY | O_CREAT | O_TRUNC, 0644);
 		if (outfile == -1)
 			print_error_and_exit("Error opening outfile");
 		infile = open(av[1], O_RDONLY);
 		if (infile == -1)
 			print_error_and_exit("Error opening infile");
-		dup2(infile, STDIN_FILENO);
+		dup2(infile, 0);
 		close(infile);
-		i = 2;
 	}
 	while (i < ac - 3)
 	{
@@ -131,5 +132,3 @@ int	main(int ac, char **av, char **envp)
 	exe_cmd(av[ac - 2], envp);
 	return (0);
 }
-
-

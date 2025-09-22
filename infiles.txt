@@ -1,0 +1,6 @@
+• file1 et file2 sont des noms de fichier.
+• cmd1 et cmd2 sont des commandes shell avec leurs paramètres.
+• cmd1 et cmd2 sont des commandes shell avec leurs paramètres.
+• file1 et file2 sont des noms de fichier.
+• cmd1 et cmd2 sont des commandes shell avec leurs paramètres.
+• cmd1 et cmd2 sont des commandes shell avec leurs paramètres.

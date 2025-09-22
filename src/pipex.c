@@ -6,13 +6,11 @@
 /*   By: macoulib <macoulib@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/11 15:12:24 by macoulib          #+#    #+#             */
-/*   Updated: 2025/09/21 18:11:56 by macoulib         ###   ########.fr       */
+/*   Updated: 2025/09/22 18:01:57 by macoulib         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/pipex.h"
-
-
 
 void	cleanup(t_data *data)
 {
@@ -37,39 +35,46 @@ void	cleanup(t_data *data)
 	free(data);
 }
 
-char	*find_path(char **env, char *cmd)
+char	**get_all_paths(char **env)
 {
-	int		i;
-	char	**paths;
-	char	*good_path;
-	char	*path_find;
+	int	i;
 
 	i = 0;
-	while (ft_strnstr(env[i], "PATH", 4) == 0)
+	while (env[i] != NULL)
+	{
+		if (ft_strnstr(env[i], "PATH", 4) != NULL)
+			return (ft_split(env[i] + 5, ':'));
 		i++;
-	if (!env[i])
-		return (NULL);
-	paths = ft_split(env[i] + 5, ':');
-	if (!paths)
+	}
+	return (NULL);
+}
+
+char	*find_path(char **env, char *cmd)
+{
+	char	**paths;
+	char	*path_find;
+	char	*good_path;
+	int		i;
+
+	paths = get_all_paths(env);
+	if (paths == NULL)
 		return (NULL);
 	i = 0;
-	while (paths[i])
+	while (paths[i] != NULL)
 	{
 		path_find = ft_strjoin(paths[i], "/");
+		if (path_find == NULL)
+			return (NULL);
 		good_path = ft_strjoin(path_find, cmd);
 		free(path_find);
-		if (access(good_path, F_OK) == 0)
-		{
-			free_split(paths);
-			return (good_path);
-		}
+		if (good_path == NULL)
+			return (NULL);
+		if (access(good_path, F_OK | X_OK) == 0)
+			return (free_split(paths), good_path);
 		free(good_path);
 		i++;
 	}
-	i = -1;
-	while (paths[++i])
-		free(paths[i]);
-	free(paths);
+	free_split(paths);
 	return (NULL);
 }
 
